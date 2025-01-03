@@ -1,0 +1,202 @@
+{% extends "core/base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+
+<section class="pt-5">
+  <div class="container px-4 px-lg-5 mt-3">
+    <!-- Search Results Header -->
+    <header
+      class="d-flex flex-column flex-md-row justify-content-between mb-4 pb-2 border-bottom"
+    >
+      <h3 class="mb-3">Products</h3>
+    </header>
+
+    <div class="row lg-row-cols-2 gx-4 gx-xl-5">
+
+      <!-- Filter by Category -->
+      <div class="d-none d-lg-block col mb-3">
+        <div class="card">
+            <header class="card-header">
+              <h6 class="title ">Filter by category</h6>
+            </header>
+            <div class="card-body">
+              <ul class="list-menu">
+                <a href="?category=" class='text-decoration-none {% if not selected_category %}text-primary text-decoration-underline{% endif %}'>
+                  All
+                </a>
+                {% for category in categories %}
+                <li>
+                  <a
+                    href="?category={{ category.id }}"
+                    class='text-decoration-none {% if category.id|stringformat:"s" == selected_category %}text-primary text-decoration-underline{% endif %}'>
+                    {{ category.name }}
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="col-12 col-lg-9">
+        <div class="d-flex justify-content-end mb-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <a
+              class="btn btn-warning mx-2 d-block"
+              href="{% update_query_param 'layout' next_layout %}"
+            >
+              {% if layout == 'grid' %}
+              View as list
+              {% else %}
+              View as grid
+              {% endif %}
+            </a>
+            <h6 class="me-3">Sort by :</h6>
+            <div class="">
+              <select
+                id="sort_select"
+                data-mdb-select-init class="form-select"
+                onchange="sortList(this)"
+              >
+                <option value="popularity">Popularity</option>
+                <option value="price_asc">Price: Low to high</option>
+                <option value="price_desc">Price: High to low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div
+          class="
+            row gx-4 gx-xl-5 row-cols-1
+            row-cols-md-1 justify-content-start
+            {% if layout == 'grid' %}
+            row-cols-lg-2
+            {% endif %}
+          "
+        >
+          <!-- Product Card -->
+          {% for product in page_obj %}
+          <div class="col mb-5">
+            <div class="card mb-3 h-100">
+              <div class="row g-0 h-100">
+                <div class="col-6 h-100">
+                  <a href="{% url 'product' slug=product.slug %}">
+                    <img
+                      src="{{ product.image.url }}"
+                      class="img-fluid rounded-start h-100 object-fit-cover"
+                      alt="{{ product.title }}"
+                    />
+                  </a>
+                </div>
+                <div class="col-6">
+                  <div class="card-body d-flex flex-column">
+                    <a href="{% url 'product' slug=product.slug %}" class="text-decoration-none">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    </a>
+
+                    <!-- Product reviews-->
+                    <div
+                      class="d-flex justify-content-start small text-warning mb-2"
+                    >
+                      <div class="bi-star-fill"></div>
+                      <div class="bi-star-fill"></div>
+                      <div class="bi-star-fill"></div>
+                      <div class="bi-star-fill"></div>
+                      <div class="bi-star-fill"></div>
+                    </div>
+                    <p class="card-text mb-0">
+                      <small class="text-body-secondary">
+                        Availability:
+                        {% if product.stock > 0 %}
+                        <span class="text-success">
+                          In Stock
+                        </span>
+                          {% else %}
+                        <span class="text-danger">
+                          Out of stock
+                        </span>
+                        {% endif %}
+                      </small>
+                    </p>
+                    <p class="card-text fs-4">${{ product.price }}</p>
+                    <div class="mt-auto">
+                      <a class="btn btn-success fs-5 mt-auto" href="{% url 'product' slug=product.slug %}">View details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <!-- /Product Card -->
+        </div>
+
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-start">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="{% update_query_param 'page' page_obj.previous_page_number %}"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+              <a class="page-link" href="{% update_query_param 'page' num %}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="{% update_query_param 'page' page_obj.next_page_number %}"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  window.onload = function() {
+    let params = new URLSearchParams(location.search);
+    let sort_by = params.get('sort_by')
+
+    if (sort_by) {
+      let htmlSelect = document.getElementById('sort_select');
+      htmlSelect.value = sort_by;
+    }
+  }
+
+  function sortList(htmlSelect) {
+    // alert(htmlSelect);
+    let opt = htmlSelect.options[htmlSelect.selectedIndex];
+    // alert(opt.value);
+
+    let params = new URLSearchParams(location.search);
+    params.delete('page');
+
+    params.set("sort_by", opt.value);
+
+    window.location.href = 
+      window.location.pathname
+      + "?"
+      + params.toString();
+  }
+</script>
+{% endblock scripts %}

@@ -1,0 +1,156 @@
+{% extends "core/base.html" %} {% block content %}
+
+<section class="gradient-custom-2">
+  <div class="py-5">
+    <div class="row d-flex align-items-center justify-content-center h-100">
+      <div class="col-lg-9 col-xl-8">
+        <div class="card p-5 rounded shadow">
+
+          <form method="post" enctype="multipart/form-data" class="needs-validation row g-5">
+            <!-- Profile Pic Section -->
+            <div class="col-md-4 col-lg-3">
+              <div
+                class="h-100 d-flex flex-column gap-4 align-items-center justify-content-center"
+              >
+                <div class="d-flex flex-column gap-4 justify-content-center mb-4">
+                  <img
+                    id="selectedAvatar"
+                    src="{{ pfp_url }}"
+                    class="rounded"
+                    style="width: 200px; height: 200px; object-fit: cover"
+                    alt="example placeholder"
+                  />
+                  <div>
+                    <label
+                      class="btn btn-primary btn-rounded"
+                      for="profile_pic_file"
+                      style="width: 100%"
+                    >
+                      Choose file
+                    </label>
+                    <div class="d-none">
+                    {{ user_form.profile_picture }}
+                    </div>
+                  </div>
+                  <!-- <button type="button" class="btn btn-outline-danger py-2 fs-6">
+                    Remove Profile Pic
+                  </button> -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Fields Section -->
+            <div class="col-md-8 col-lg-9">
+              <div class="row g-3">
+                {% csrf_token %}
+                {{ user_form.non_field_errors }}
+                <div class="col-md-6">
+                  {{ user_form.first_name.label_tag }}
+                  {{ user_form.first_name }}
+                  <div class="text-danger">
+                    {{ user_form.first_name.errors }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  {{ user_form.last_name.label_tag }}
+                  {{ user_form.last_name }}
+                  <div class="text-danger">
+                    {{ user_form.last_name.errors }}
+                  </div>
+                </div>
+                <div class="col-12">
+                  {{ user_form.phone_number.label_tag }}
+                  {{ user_form.phone_number }}
+                  <div class="text-danger">
+                    {{ user_form.phone_number.errors }}
+                  </div>
+                </div>
+                <div class="col-12">
+                  {{ user_form.address_street.label_tag }}
+                  {{ user_form.address_street }}
+                  <div class="text-danger">
+                    {{ user_form.address_street.errors }}
+                  </div>
+                </div>
+                <div class="col">
+                  {{ user_form.address_city.label_tag }}
+                  {{ user_form.address_city }}
+                  <div class="text-danger">
+                    {{ user_form.address_city.errors }}
+                  </div>
+                </div>
+                <div class="col">
+                  {{ user_form.address_country.label_tag }}
+                  {{ user_form.address_country }}
+                  <div class="text-danger">
+                    {{ user_form.address_country.errors }}
+                  </div>
+                </div>
+                <div class="col">
+                  {{ user_form.address_postal_code.label_tag }}
+                  {{ user_form.address_postal_code }}
+                  <div class="text-danger">
+                    {{ user_form.address_postal_code.errors }}
+                  </div>
+                </div>
+                <div class="col-12 mt-4">
+                  <div class="d-flex gap-3 justify-content-end">
+                    <button type="submit" name="update_info" class="btn btn-primary">
+                      Update Profile
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- Password Section -->
+          <div class="col-12 border-top pt-4 mt-4">
+            <form method="POST" class="row g-3">
+
+              {% csrf_token %}
+              <div class="text-danger">
+                {{ password_form.non_field_errors }}
+              </div>
+
+              <div class="col-md-4">
+                {{ password_form.old_password.label_tag }}
+                {{ password_form.old_password }}
+                <div class="text-danger">
+                  {{ password_form.old_password.errors }}
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                {{ password_form.new_password1.label_tag }}
+                {{ password_form.new_password1 }}
+                <div class="text-danger">
+                  {{ password_form.new_password1.errors }}
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                {{ password_form.new_password2.label_tag }}
+                {{ password_form.new_password2 }}
+                <div class="text-danger">
+                  {{ password_form.new_password2.errors }}
+                </div>
+              </div>
+
+              <div class="col-12 mt-4">
+                <div class="d-flex gap-3 justify-content-end">
+                  <button type="submit" name="change_password" class="btn btn-primary">
+                    Update Password
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

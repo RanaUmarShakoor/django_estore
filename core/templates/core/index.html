@@ -1,0 +1,71 @@
+{% extends "core/base.html" %} {% block content %}
+
+<!-- Header-->
+<header class="banner-1 py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">Morgan's Basement</h1>
+      <p class="lead fw-normal text-white-50 mb-0">
+        Where Every Find is a Fortune!
+      </p>
+    </div>
+  </div>
+</header>
+
+<section class="pt-5">
+  <div class="container px-4 px-lg-5 mt-3">
+    <h3 class="mb-4">Featured Products</h3>
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+      <!-- Product Card -->
+      {% for product in featured_products %}
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <a href="{% url 'product' slug=product.slug %}">
+            <img
+              class="card-img-top"
+              src="{{ product.image.url }}"
+              alt="{{ product.title }}"
+            />
+          </a>
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <a href="{% url 'product' slug=product.slug %}" class="text-decoration-none text-reset">
+                <h5 class="fw-bolder">{{ product.title }}</h5>
+              </a>
+              <!-- Product price-->
+              ${{ product.price }}
+            </div>
+            <!-- Product reviews-->
+            <div class="d-flex justify-content-center small text-warning mt-3">
+              <div class="bi-star-fill"></div>
+              <div class="bi-star-fill"></div>
+              <div class="bi-star-fill"></div>
+              <div class="bi-star-fill"></div>
+              <div class="bi-star-fill"></div>
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center">
+              <a class="btn btn-success fs-5 mt-auto" href="{% url 'product' slug=product.slug %}">View details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <!-- /Product Card -->
+    </div>
+  </div>
+</section>
+
+<section class="d-flex justify-content-center pb-5">
+  <a href="{% url 'products' %}" class="btn btn-primary">
+    View all products
+  </a>
+</section>
+
+{% endblock content %}

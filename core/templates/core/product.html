@@ -1,0 +1,63 @@
+{% extends "core/base.html" %} {% block content %}
+
+<div class="container my-5">
+
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <div class="alert alert-primary mb-5" role="alert">
+        {{ message }}
+      </div>
+      {% endfor %}
+  </ul>
+  {% endif %}
+
+
+  <div class="row">
+    {% if product.image %}
+    <div class="col-md-7">
+      <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-center">
+          <img
+            src="{{ product.image.url }}"
+            class="product-img-main img-fluid rounded"
+            alt="{{ product.title }}"
+          />
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="col-md-5">
+      <h2>{{ product.title }}</h2>
+      <h3 class="text-muted">${{ product.price }}</h3>
+      <p class="mt-4">
+        {{ product.desc }}
+      </p>
+
+      <p class="mt-2 mb-4">
+        <strong>Type:</strong>
+        {{ product.get_product_type_display }}
+      </p>
+
+      <form action="{% url 'add_to_cart' product.id %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="quantity" class="form-label">Quantity</label>
+          <input
+            type="number"
+            class="form-control"
+            id="quantity"
+            name="quantity"
+            value="1"
+            min="1"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100">
+          <i class="bi bi-cart-fill"></i>
+          Add to Cart
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

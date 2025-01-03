@@ -1,0 +1,87 @@
+{% extends "core/base.html" %}
+
+{% load custom_filters %}
+
+{% block content %}
+
+<section class="gradient-custom">
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card" style="border-radius: 10px">
+          <div class="card-header d-flex justify-content-between px-4 py-5">
+            <h5 class="text-muted mb-0">
+              Order #
+              <span style="color: #6d72c3">{{ order.id }}</span>
+            </h5>
+            <h6 class="text-muted mb-0">
+              Status:
+              <span class="text-success">Completed</span>
+            </h6>
+          </div>
+          <div class="card-body p-4">
+
+            {% for line in order_lines %}
+            <div class="card shadow-0 border mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-2">
+                    <img
+                      src="{{ line.product.image.url }}"
+                      class="img-fluid"
+                      alt="Phone"
+                    />
+                  </div>
+                  <div
+                    class="col-md-4 text-left d-flex justify-content-start align-items-center"
+                  >
+                    <p class="text-muted mb-0">{{ line.product.title }}</p>
+                  </div>
+                  <div
+                    class="col-md-4 text-center d-flex justify-content-center align-items-center"
+                  >
+                    <p class="text-muted mb-0 small">Qty: {{ line.quantity }}</p>
+                  </div>
+                  <div
+                    class="col-md-2 text-center d-flex justify-content-center align-items-center"
+                  >
+                    <p class="text-muted mb-0 small">${{ line.unit_price|mul:line.quantity }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-between pt-2">
+              <p class="text-muted mb-0">
+                <strong>Invoice Date:</strong> {{ order.placed_at }}
+              </p>
+              <p class="text-muted mb-0">
+                <span class="fw-bold me-4">Subtotal</span>
+                ${{ order.total_amount }}
+              </p>
+            </div>
+
+          </div>
+          <div
+            class="card-footer border-0 px-4 py-3"
+            style="
+              background-color: #6d72c3;
+              border-bottom-left-radius: 10px;
+              border-bottom-right-radius: 10px;
+            "
+          >
+            <h5
+              class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0"
+            >
+              Total:
+              <span class="h2 mb-0 ms-2">${{ order.total_amount }}</span>
+            </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
